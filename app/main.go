@@ -1,9 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"math"
+	"os"
 	"sort"
+	"strconv"
+	"strings"
 )
 
 /*
@@ -42,8 +46,8 @@ func main() {
 	printSomething(colors)
 
 	/*
-		 	make()
-			Declare initial size & total capacity of collection types
+		make()
+		Declare initial size & total capacity of collection types
 	*/
 	//<type>, initialSize, totalCapacity?
 	numbers := make([]int, 5, 15)
@@ -63,6 +67,7 @@ func main() {
 	// [<keytype>]<valuetype>, initialCapacity?
 	planets := make(map[int]string, 8)
 
+	// manually populate map
 	planets[0] = "Mercury"
 	planets[1] = "Venus"
 	planets[2] = "Earth"
@@ -200,87 +205,60 @@ func BinarySearch(nums []int, target int) int {
 	return -1
 }
 
-// func getStdInReader() bufio.Reader {
-// 	return *bufio.NewReader(os.Stdin);
-// }
+func getStdInReader() bufio.Reader {
+	return *bufio.NewReader(os.Stdin)
+}
 
-// func readStdInText(stdInReader bufio.Reader) {
-// 	fmt.Print("Enter some text: ");
+func readStdInText(stdInReader bufio.Reader) {
+	fmt.Print("Enter some text: ")
 
-// 	input, err := stdInReader.ReadString('\n');
+	input, err := stdInReader.ReadString('\n')
 
-// 	printError(err);
+	printError(err)
 
-// 	fmt.Print("Your input: ");
+	fmt.Print("Your input: ")
 
-// 	printSomething(input);
-// }
+	printSomething(input)
+}
 
-// func readStdInNumber(stdInReader bufio.Reader) {
-// 	fmt.Print("Enter a number: ");
+// Parse float from stdIn string
+func readStdInNumber(stdInReader bufio.Reader) {
+	fmt.Print("Enter a number: ")
 
-// 	num, err := stdInReader.ReadString('\n');
+	num, err := stdInReader.ReadString('\n')
 
-// 	printError(err);
-// 					// arg1: have string | arg2: want bit capacity
-// 	parsed, err := strconv.ParseFloat(strings.TrimSpace(num), 32);
+	printError(err)
+	// arg1: have string | arg2: want bit capacity
+	parsed, err := strconv.ParseFloat(strings.TrimSpace(num), 32)
 
-// 	printError(err);
+	printError(err)
 
-// 	printSomething(parsed);
-// }
+	printSomething(parsed)
+}
 
-// func printError(err interface {}) {
-// 	if err != nil {
-// 		fmt.Println(err)
-// 	} else {
-// 		return
-// 	}
-// }
+// Utility function for handling errors
+func printError(err error) {
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		return
+	}
+}
 
-// // Type coercion using built-ins
-// func typeWrappers() {
-// 	var someInt int = 5;
-// 	var someFloat float64 = 42;
+// Type coercion using built-ins
+func typeWrappers() {
+	var someInt int = 5
+	var someFloat float64 = 42
 
-// 	var floatFromInt float64 = float64(someInt);
+	var floatFromInt float64 = float64(someInt)
 
-// 	floatSum := someFloat + floatFromInt;
+	floatSum := someFloat + floatFromInt
 
-// 	printSomething(floatSum);
+	printSomething(floatSum)
 
-// 	var intFromFloat int = int(someFloat);
+	var intFromFloat int = int(someFloat)
 
-// 	intSum := someInt + intFromFloat;
+	intSum := someInt + intFromFloat
 
-// 	printSomething(intSum);
-// }
-
-// func TestBinarySearch(t *testing.T) {
-// 	var numbas = []int{1, 2, 3, 5, 8, 13, 21};
-
-// 	target := 8;
-// 	result := binarySearch(numbas, target);
-// 	expected := 4
-
-// 	if result != expected {
-//         t.Errorf("binarySearch(%v, %d) should have returned index %d", numbas, target, expected);
-// 	}
-
-// 	target = 21;
-// 	result= binarySearch(numbas, target);
-// 	expected = 6;
-
-// 	if result != expected {
-//         t.Errorf("binarySearch(%v, %d) should have returned index %d", numbas, target, expected);
-// 	}
-
-// 	target = 14;
-// 	result = binarySearch(numbas, target);
-// 	expected = -1;
-
-// 	if result != expected {
-//         t.Errorf("binarySearch(%v, %d) should have returned index %d", numbas, target, expected);
-// 	}
-
-// }
+	printSomething(intSum)
+}
