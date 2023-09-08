@@ -107,12 +107,11 @@ func main() {
 
 	fmt.Print(Joshua, "\n")
 
-	// Special features of "if":
 	var result bool
-
 	min := 0
 	max := 56
 
+	// Unique feature of "if":
 	if x := 55; x < max && x > min { // initialize a variable before condition
 		result = true
 	} else {
@@ -159,10 +158,9 @@ func main() {
 		}
 	}
 
+	// label can be "jumped to" using goto command
 loopEnd:
 	fmt.Println("Exited loop early @ goto statement!")
-
-	// FUNCTIONS
 }
 
 func printSomething(smth interface{}) {
