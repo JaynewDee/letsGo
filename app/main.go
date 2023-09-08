@@ -107,8 +107,10 @@ func main() {
 		fmt.Println(planets[keys[idx]])
 	}
 
+	hobbies := []string{"coding", "movies", "music"}
+
 	// INSTANTIATE STRUCTS
-	Joshua := Human{30, 170, 73, "Blue", []string{"coding", "movies", "music"}}
+	Joshua := Human{30, 170, 73, "Blue", hobbies}
 
 	fmt.Print(Joshua, "\n")
 
@@ -250,7 +252,7 @@ func typeWrappers() {
 	var someInt int = 5
 	var someFloat float64 = 42
 
-	var floatFromInt float64 = float64(someInt)
+	floatFromInt := float64(someInt)
 
 	floatSum := someFloat + floatFromInt
 
