@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"sync"
+)
+
 /*
 	BUILDER
 */
@@ -135,4 +140,42 @@ func NewFactoryConfig(configType string, userId int, url string, key string) iCo
 	}
 
 	return nil
+}
+
+/* 
+	SINGLETON
+*/
+type Logger struct {
+	logLevel int
+}
+
+func (l *Logger) Log(s string) {
+	fmt.Println(l.logLevel, ":", s)
+}
+
+func (l *Logger) SetLogLevel(lvl int) {
+	l.logLevel = lvl
+}
+
+var logger *Logger
+var once sync.Once
+
+func getLoggerInstance() *Logger {
+	// Wrapping instantiation in once.Do() provides concurrency safety to singleton!
+	once.Do(func() {
+		if logger == nil {
+			fmt.Println("Creating Logger Singleton Instance ... ")	
+			logger = &Logger{}
+		}
+	})
+
+	fmt.Println("Returning Logger Singleton ... ")
+	return logger
+}
+
+
+func logFromGoroutines() {
+	for i := 1; i < 10; i++ {
+		go getLoggerInstance()
+	}
 }
