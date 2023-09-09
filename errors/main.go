@@ -1,4 +1,4 @@
-package main
+package errors
 
 import (
 	"fmt"
@@ -17,7 +17,7 @@ func main() {
 		fmt.Println("RECOVERED FROM ERROR:", err)
 	}
 
-	fmt.Println("Value?:", v)
+	fmt.Println("Value?:", v) //
 }
 
 type Config struct{}
