@@ -1,1 +1,1 @@
-package patterns
+package main

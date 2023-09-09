@@ -1,4 +1,4 @@
-package main
+package functions
 
 import "fmt"
 
@@ -46,17 +46,17 @@ type CMethod = func() int
 
 func makeCounter(start int) (CMethod, CMethod, CMethod) {
 
+	current := func() int {
+		return start
+	}
+
 	increment := func() int {
-		start += 1
+		start++
 		return start
 	}
 
 	decrement := func() int {
-		start -= 1
-		return start
-	}
-
-	current := func() int {
+		start--
 		return start
 	}
 
@@ -68,7 +68,7 @@ func makeCounter(start int) (CMethod, CMethod, CMethod) {
 */
 // Define struct
 type Counter struct {
-	// capital name provides public visibility | member can be accessed and modified externally
+	// capital field name provides public visibility
 	Count int
 }
 
@@ -79,7 +79,7 @@ func (c *Counter) Get() int {
 
 func (c *Counter) Increment() *Counter {
 	c.Count += 1 // use receiver to reference the type struct's members
-	return c     //
+	return c
 }
 
 func (c *Counter) Decrement() *Counter {
