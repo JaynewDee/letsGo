@@ -23,4 +23,5 @@ func main() {
 	fmt.Println("Factory Prod Config: ", factoryProdConfig)
 
 	// SINGLETON PATTERN
+	LogConcurrently()
 }

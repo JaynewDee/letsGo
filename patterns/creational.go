@@ -170,12 +170,15 @@ func getLoggerInstance() *Logger {
 	})
 
 	fmt.Println("Returning Logger Singleton ... ")
+
 	return logger
 }
 
-
-func logFromGoroutines() {
+func LogConcurrently() {
+	// Demonstrates that Logger is only created a single time
 	for i := 1; i < 10; i++ {
 		go getLoggerInstance()
 	}
+
+	fmt.Scanln()
 }
