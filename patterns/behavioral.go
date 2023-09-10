@@ -31,6 +31,13 @@ func main() {
 		fmt.Println("Book author:", b.Author)
 		return nil
 	})
+
+	// with pull interface
+	bookIter := lib.createIterator()
+	for bookIter.hasNext() {
+		book := bookIter.next()
+		fmt.Printf("Book %+v\n", book)
+	}
 }
 
 /*
@@ -117,6 +124,7 @@ var lib *Library = &Library{
 	},
 }
 
+// Callback / Push
 func (l *Library) Iterator(f func(Book) error) {
 	var err error
 
@@ -130,5 +138,43 @@ func (l *Library) Iterator(f func(Book) error) {
 
 func printBookName(b Book) error {
 	fmt.Println("Book title:", b.Name)
+	return nil
+}
+
+// Interface / Pull
+type IterableCollection interface {
+	createIterator() iterator
+}
+
+type iterator interface {
+	hasNext() bool
+	next() *Book
+}
+
+// Stores collection and keeps track of iterator progress
+type BookIterator struct {
+	current int
+	books   []Book
+}
+
+func (l *Library) createIterator() iterator {
+	return &BookIterator{
+		books: l.Collection,
+	}
+}
+func (b *BookIterator) hasNext() bool {
+	// check for next book
+	return b.current < len(b.books)
+}
+
+func (b *BookIterator) next() *Book {
+	if b.hasNext() {
+		// get next book
+		bk := b.books[b.current]
+		// advance iterator
+		b.current++
+		// return pointer to book
+		return &bk
+	}
 	return nil
 }
