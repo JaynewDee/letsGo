@@ -1,4 +1,4 @@
-package main
+package patterns
 
 import (
 	"fmt"
@@ -53,7 +53,8 @@ func (tv *TV) channelDown() int {
 	return tv.channel
 }
 
-// Radio has the same behaviors but the API is defined differently
+// Radio's API is defined differently but has the same essential behaviors,
+// making it a good candidate for the Adapter pattern
 type Radio struct {
 	currentChannel int
 	currentVolume  int
@@ -152,13 +153,14 @@ func milkMatcher(kind MilkKind, to string) (MilkKind, error) {
 
 type coffeeOps interface {
 	useBeanVariety(variety string)
-	useDrinkSize(size int)
+	useDrinkSize(size Size)
 	useFoam(units int)
 	grindBeans(amount float32)
 	useHotWater()
 	useColdWater()
 	addSyrup(flavor string)
-	addMilk(kind milkKind)
+	addMilk(kind MilkKind)
+	addIce(size Size)
 }
 
 type coffeeDrinks interface {
@@ -174,5 +176,13 @@ type CoffeeMachine struct {
 
 func (cm *CoffeeMachine) Drip() {
 	cm.operator.useDrinkSize(Small)
-	cm.operator.grindBeans()
+	cm.operator.grindBeans(3.0)
+	cm.operator.useHotWater()
+}
+
+func (cm *CoffeeMachine) Iced() {
+	cm.operator.useDrinkSize(Medium)
+	cm.operator.grindBeans(5.0)
+	cm.operator.useColdWater()
+	cm.operator.addIce(Medium)
 }

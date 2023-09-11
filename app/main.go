@@ -8,6 +8,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"start.com/mod/patterns"
 )
 
 /*
@@ -23,6 +25,62 @@ type Human struct {
 }
 
 func main() {
+	// Observer
+	listener1 := patterns.DataListener{
+		Name: "Listener 1",
+	}
+	listener2 := patterns.DataListener{
+		Name: "Listener 2",
+	}
+
+	subject := &patterns.DataSubject{}
+	subject.Register(listener1)
+	subject.Register(listener2)
+
+	subject.ChangeItem("Monday!")
+	subject.ChangeItem("Tuesday!")
+	subject.ChangeItem("Wednesday!")
+
+	subject.Unregister(listener2)
+
+	subject.ChangeItem("Wednesday!")
+
+	var Lib *patterns.Library = &patterns.Library{
+		Collection: []patterns.Book{
+			{
+				Name:          "Siddhartha",
+				Author:        "Herman Hesse",
+				YearPublished: 1922,
+			},
+			{
+				Name:          "Flow: The Psychology of Optimal Experience",
+				Author:        "Csikszentmihalyi",
+				YearPublished: 1990,
+			},
+			{
+				Name:          "Man's Search for Meaning",
+				Author:        "Viktor Frankl",
+				YearPublished: 1946,
+			},
+		},
+	}
+	// Iterator
+	Lib.Iterator(patterns.PrintBookName)
+
+	// with anonymous callback
+	Lib.Iterator(func(b patterns.Book) error {
+		fmt.Println("Book author:", b.Author)
+		return nil
+	})
+
+	// with pull interface
+	// provides greater control over processing of each item
+	bookIter := Lib.CreateIterator()
+
+	for bookIter.HasNext() {
+		book := bookIter.Next()
+		fmt.Printf("Book %+v\n", book)
+	}
 
 	someInt := 55
 

@@ -1,55 +1,18 @@
-package main
+package patterns
 
 import "fmt"
 
-func main() {
-	// Observer
-	listener1 := DataListener{
-		Name: "Listener 1",
-	}
-	listener2 := DataListener{
-		Name: "Listener 2",
-	}
-
-	subject := &DataSubject{}
-	subject.register(listener1)
-	subject.register(listener2)
-
-	subject.changeItem("Monday!")
-	subject.changeItem("Tuesday!")
-	subject.changeItem("Wednesday!")
-
-	subject.unregister(listener2)
-
-	subject.changeItem("Wednesday!")
-
-	// Iterator
-	lib.Iterator(printBookName)
-
-	// with anonymous callback
-	lib.Iterator(func(b Book) error {
-		fmt.Println("Book author:", b.Author)
-		return nil
-	})
-
-	// with pull interface
-	bookIter := lib.createIterator()
-	for bookIter.hasNext() {
-		book := bookIter.next()
-		fmt.Printf("Book %+v\n", book)
-	}
-}
-
 /*
 OBSERVER
+>>> Defines a pattern where a given object maintains a list of dependent objects that are notified when the state of the main object changes
 */
-type observer interface {
+type Observer interface {
 	onUpdate(data string)
 }
 
-type observable interface {
-	register(obs observer)
-	unregister(obs observer)
+type Observable interface {
+	register(obs Observer)
+	unregister(obs Observer)
 	notifyAll()
 }
 
@@ -65,16 +28,16 @@ func (dl *DataListener) onUpdate(data string) {
 	fmt.Println("Listener", dl.Name, "got data change:", data)
 }
 
-func (ds *DataSubject) changeItem(data string) {
+func (ds *DataSubject) ChangeItem(data string) {
 	ds.field = data
-	ds.notifyAll()
+	ds.NotifyAll()
 }
 
-func (ds *DataSubject) register(o DataListener) {
+func (ds *DataSubject) Register(o DataListener) {
 	ds.observers = append(ds.observers, o)
 }
 
-func (ds *DataSubject) unregister(o DataListener) {
+func (ds *DataSubject) Unregister(o DataListener) {
 	var newObservers []DataListener
 
 	for _, obs := range ds.observers {
@@ -85,7 +48,7 @@ func (ds *DataSubject) unregister(o DataListener) {
 	ds.observers = newObservers
 }
 
-func (ds *DataSubject) notifyAll() {
+func (ds *DataSubject) NotifyAll() {
 	for _, obs := range ds.observers {
 		obs.onUpdate(ds.field)
 	}
@@ -104,26 +67,6 @@ type Library struct {
 	Collection []Book
 }
 
-var lib *Library = &Library{
-	Collection: []Book{
-		{
-			Name:          "Siddhartha",
-			Author:        "Herman Hesse",
-			YearPublished: 1922,
-		},
-		{
-			Name:          "Flow: The Psychology of Optimal Experience",
-			Author:        "Csikszentmihalyi",
-			YearPublished: 1990,
-		},
-		{
-			Name:          "Man's Search for Meaning",
-			Author:        "Viktor Frankl",
-			YearPublished: 1946,
-		},
-	},
-}
-
 // Callback / Push
 func (l *Library) Iterator(f func(Book) error) {
 	var err error
@@ -136,19 +79,19 @@ func (l *Library) Iterator(f func(Book) error) {
 	}
 }
 
-func printBookName(b Book) error {
+func PrintBookName(b Book) error {
 	fmt.Println("Book title:", b.Name)
 	return nil
 }
 
 // Interface / Pull
 type IterableCollection interface {
-	createIterator() iterator
+	CreateIterator() Iterator
 }
 
-type iterator interface {
-	hasNext() bool
-	next() *Book
+type Iterator interface {
+	HasNext() bool
+	Next() *Book
 }
 
 // Stores collection and keeps track of iterator progress
@@ -157,18 +100,18 @@ type BookIterator struct {
 	books   []Book
 }
 
-func (l *Library) createIterator() iterator {
+func (l *Library) CreateIterator() Iterator {
 	return &BookIterator{
 		books: l.Collection,
 	}
 }
-func (b *BookIterator) hasNext() bool {
+func (b *BookIterator) HasNext() bool {
 	// check for next book
 	return b.current < len(b.books)
 }
 
-func (b *BookIterator) next() *Book {
-	if b.hasNext() {
+func (b *BookIterator) Next() *Book {
+	if b.HasNext() {
 		// get next book
 		bk := b.books[b.current]
 		// advance iterator

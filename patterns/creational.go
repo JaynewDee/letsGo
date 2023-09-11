@@ -1,12 +1,11 @@
-package main
+package patterns
 
 import (
 	"fmt"
-	"sync"
 )
 
 /*
-	BUILDER
+BUILDER
 */
 type Config struct {
 	userId int
@@ -43,7 +42,7 @@ func (c *ConfigBuilder) SetKey(key string) *ConfigBuilder {
 	return c
 }
 
-func (c *ConfigBuilder) SetDomain(domain string) *ConfigBuilder{
+func (c *ConfigBuilder) SetDomain(domain string) *ConfigBuilder {
 	c.Domain = domain
 	return c
 }
@@ -56,15 +55,15 @@ func (c *ConfigBuilder) SetPort(port int) *ConfigBuilder {
 func (c *ConfigBuilder) Build() *Config {
 	return &Config{
 		userId: c.UserId,
-		url: c.Url,
-		key: c.Key,
+		url:    c.Url,
+		key:    c.Key,
 		domain: c.Domain,
-		port: c.Port,
+		port:   c.Port,
 	}
 }
 
-/* 
-	FACTORY
+/*
+FACTORY
 */
 type iConfig interface {
 	setUserId(id int) *config
@@ -77,8 +76,8 @@ type iConfig interface {
 
 type config struct {
 	userId int
-	url string
-	key string
+	url    string
+	key    string
 }
 
 type devConfig struct {
@@ -111,12 +110,12 @@ func (c *config) getKey() string {
 	return c.key
 }
 
-func createDevConfig(userId int, url string, key string ) iConfig {
+func createDevConfig(userId int, url string, key string) iConfig {
 	return &devConfig{
 		config: config{
 			userId: userId,
-			url: url,
-			key: key,
+			url:    url,
+			key:    key,
 		},
 	}
 }
@@ -125,8 +124,8 @@ func createProdConfig(userId int, url string, key string) iConfig {
 	return &prodConfig{
 		config: config{
 			userId: userId,
-			url: url,
-			key: key,
+			url:    url,
+			key:    key,
 		},
 	}
 }
@@ -142,43 +141,84 @@ func NewFactoryConfig(configType string, userId int, url string, key string) iCo
 	return nil
 }
 
-/* 
-	SINGLETON
+/*
+SINGLETON
 */
-type Logger struct {
-	logLevel int
-}
+// type Logger struct {
+// 	logLevel int
+// }
 
-func (l *Logger) Log(s string) {
-	fmt.Println(l.logLevel, ":", s)
-}
+// func (l *Logger) Log(s string) {
+// 	fmt.Println(l.logLevel, ":", s)
+// }
 
-func (l *Logger) SetLogLevel(lvl int) {
-	l.logLevel = lvl
-}
+// func (l *Logger) SetLogLevel(lvl int) {
+// 	l.logLevel = lvl
+// }
 
-var logger *Logger
-var once sync.Once
+// var logger *Logger
+// var once sync.Once
 
-func getLoggerInstance() *Logger {
-	// Wrapping instantiation in once.Do() provides concurrency safety to singleton!
-	once.Do(func() {
-		if logger == nil {
-			fmt.Println("Creating Logger Singleton Instance ... ")	
-			logger = &Logger{}
+// func getLoggerInstance() *Logger {
+// 	// Wrapping instantiation in once.Do() provides concurrency safety to singleton!
+// 	once.Do(func() {
+// 		if logger == nil {
+// 			fmt.Println("Creating Logger Singleton Instance ... ")
+// 			logger = &Logger{}
+// 		}
+// 	})
+
+// 	fmt.Println("Returning Logger Singleton ... ")
+
+// 	return logger
+// }
+
+// func LogConcurrently() {
+// 	// Demonstrates that Logger is only created a single time
+// 	for i := 1; i < 10; i++ {
+// 		go getLoggerInstance()
+// 	}
+
+//		fmt.Scanln()
+//	}
+
+type Log = func(s string)
+type Level = func() int
+type SetLevel = func(lvl int)
+
+func Logger(logLevel int) (Log, Level, SetLevel) {
+	return func(s string) {
+			fmt.Println(logLevel, ":", s)
+		},
+
+		func() int {
+			return logLevel
+		},
+
+		func(lvl int) {
+			logLevel = lvl
 		}
-	})
 
-	fmt.Println("Returning Logger Singleton ... ")
-
-	return logger
 }
 
-func LogConcurrently() {
-	// Demonstrates that Logger is only created a single time
-	for i := 1; i < 10; i++ {
-		go getLoggerInstance()
-	}
+// type ILogger interface {
+// 	Log(s string)
+// 	Level() int
+// 	SetLevel(lvl int)
+// }
 
-	fmt.Scanln()
-}
+// type Logger struct {
+// 	logLevel int
+// }
+
+// func (l *Logger) Log(s string) {
+// 	fmt.Println(l.logLevel, ":", s)
+// }
+
+// func (l *Logger) Level() int {
+// 	return l.logLevel
+// }
+
+// func (l *Logger) SetLevel(lvl int) {
+// 	l.logLevel = lvl
+// }
